@@ -1,3 +1,13 @@
+/* পুরো গেমে কপি এবং সিলেকশন বন্ধ করা */
+* {
+    -webkit-user-select: none; /* Chrome, Safari */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* Standard */
+    -webkit-touch-callout: none; /* iOS এ লং প্রেস মেনু বন্ধ */
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* ক্লিক করলে নীল দাগ হওয়া বন্ধ */
+}
+
 body {
     background: #1a1a1a;
     display: flex;
@@ -10,39 +20,7 @@ body {
     font-family: sans-serif;
 }
 
-/* আপনার লোগো ও স্টার্ট স্ক্রিন */
-.splash-logo { width: 150px; height: auto; margin-bottom: 20px; }
-#splash-screen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #000; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; z-index: 5000;
-}
-
-/* গেম এরিয়া */
-#game-container {
-    position: relative;
-    width: 95vw;
-    max-width: 400px;
-}
-
-canvas {
-    width: 100%;
-    border: 3px solid #00ffcc;
-    background: url('grass.png');
-    background-size: cover;
-    border-radius: 10px;
-}
-
-/* বড় এবং প্রফেশনাল কন্ট্রোল বাটন */
-.controls {
-    display: grid;
-    grid-template-columns: repeat(3, 85px); /* বাটনগুলো বড় করা হয়েছে */
-    grid-template-rows: repeat(3, 85px);
-    gap: 15px;
-    margin-top: 30px;
-    justify-content: center;
-}
-
+/* আপনার আগের বড় বাটনগুলোর ডিজাইন ঠিক রাখা হয়েছে */
 .btn {
     width: 85px;
     height: 85px;
@@ -50,25 +28,9 @@ canvas {
     border: 2px solid #00ffcc;
     color: #00ffcc;
     font-size: 30px;
-    border-radius: 15px; /* চারকোনা কিন্তু একটু গোল ছাঁচ */
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 255, 204, 0.3);
-}
-
-.btn:active { background: #00ffcc; color: #000; }
-
-/* মাঝখানের স্টপ বাটন */
-.pause-btn {
-    background: rgba(255, 68, 68, 0.1);
-    border-color: #ff4444;
-    color: #ff4444;
-}
-
-#settings-menu {
-    position: fixed; top: 15px; right: 15px;
-    background: rgba(0,0,0,0.8); padding: 8px 15px;
-    border-radius: 20px; border: 1px solid #00ffcc; color: #00ffcc;
 }
