@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>AL - Snake Game</title>
-
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#00ffcc">
 
 <style>
-body{
+/* Body */
+body {
     background:#1a1a1a;
     display:flex;
     flex-direction:column;
@@ -19,13 +19,14 @@ body{
     justify-content:center;
     height:100vh;
     margin:0;
-    color:#00ffcc;
-    font-family:Arial, sans-serif;
+    font-family: Arial, sans-serif;
     overflow:hidden;
+    color: #00ffcc;
 }
 
-#splash-screen{
-    position:fixed;
+/* Splash Screen */
+#splash-screen {
+    position: fixed;
     top:0; left:0; width:100%; height:100%;
     background:#000;
     display:flex;
@@ -33,57 +34,82 @@ body{
     align-items:center;
     justify-content:center;
     z-index:1000;
-    transition:opacity 0.8s ease;
+    transition: opacity 0.8s ease;
 }
 
-.splash-logo{
+.splash-logo {
     width:150px;
     border-radius:20px;
     box-shadow:0 0 25px #00ffcc;
 }
 
-.start-btn{
+.start-btn {
     margin-top:20px;
-    padding:12px 35px;
-    font-size:18px;
-    background:#00ffcc;
+    padding:15px 40px;
+    font-size:20px;
+    background: linear-gradient(90deg,#00ffcc,#008866);
     color:#000;
     border:none;
-    border-radius:30px;
+    border-radius:35px;
     font-weight:bold;
     cursor:pointer;
-    box-shadow:0 0 15px #00ffcc;
+    box-shadow:0 0 20px #00ffcc, 0 0 40px #008866;
+    transition:0.3s;
 }
 
-canvas{
+.start-btn:hover {
+    transform: scale(1.1);
+    box-shadow:0 0 30px #00ffcc, 0 0 60px #008866;
+}
+
+/* Score Board */
+#score-board {
+    margin-bottom:10px;
+}
+
+/* Canvas */
+canvas {
     border:5px solid #333;
-    background:#000;
     max-width:90vw;
+    background: url('assets/grass.png') no-repeat center center;
+    background-size: cover;
 }
 
-.controls{
+/* Controls */
+.controls {
     display:grid;
     grid-template-columns:repeat(3,70px);
     gap:15px;
     margin-top:20px;
 }
 
-.btn{
-    width:70px; height:70px;
-    background:#222;
-    border:2px solid #00ffcc;
+.controls .btn {
+    width:70px;
+    height:70px;
+    background: linear-gradient(145deg,#111,#333);
+    border:3px solid #00ffcc;
     color:#00ffcc;
     font-size:30px;
     display:flex;
     align-items:center;
     justify-content:center;
     border-radius:50%;
+    cursor:pointer;
+    box-shadow:0 0 15px #00ffcc,0 0 30px #008866;
+    transition:0.2s;
+}
+
+.controls .btn:hover {
+    transform: scale(1.15);
+    box-shadow:0 0 25px #00ffcc,0 0 50px #008866;
+    background: linear-gradient(145deg,#222,#444);
 }
 </style>
 </head>
 
 <body>
 
+<!-- Splash Screen -->
 <div id="splash-screen">
     <img src="logo.png" class="splash-logo">
     <h2>AL GAMING</h2>
@@ -98,13 +124,15 @@ canvas{
     </div>
 </div>
 
-<div style="margin-bottom:10px;">
-স্কোর: <span id="score">0</span> |
-সেরা: <span id="highScore">0</span>
+<!-- Score -->
+<div id="score-board">
+স্কোর: <span id="score">0</span> | সেরা: <span id="highScore">0</span>
 </div>
 
+<!-- Game Canvas -->
 <canvas id="gameCanvas" width="400" height="400"></canvas>
 
+<!-- Controls -->
 <div class="controls">
     <div></div><div class="btn" onclick="changeDirection('UP')">▲</div><div></div>
     <div class="btn" onclick="changeDirection('LEFT')">◀</div>
@@ -113,7 +141,7 @@ canvas{
 </div>
 
 <script>
-
+// Canvas
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -126,9 +154,7 @@ document.getElementById("highScore").innerHTML = highScore;
 
 // Splash Flow
 window.onload = function(){
-    setTimeout(()=>{
-        document.getElementById("permission-section").style.display="block";
-    },1500);
+    setTimeout(()=>{ document.getElementById("permission-section").style.display="block"; },1500);
 };
 
 function requestPermission(){
@@ -144,6 +170,7 @@ function enterGame(){
     },800);
 }
 
+// Start Game
 function startGame(){
     snake = [{x:9*box, y:10*box}];
     food = randomFood();
@@ -151,9 +178,10 @@ function startGame(){
     d = "";
     document.getElementById("score").innerHTML = score;
     clearInterval(game);
-    game = setInterval(draw,200);
+    game = setInterval(draw,300); // Slower speed (300ms interval)
 }
 
+// Random Food
 function randomFood(){
     return {
         x: Math.floor(Math.random()*(canvas.width/box))*box,
@@ -161,6 +189,7 @@ function randomFood(){
     };
 }
 
+// Change Direction
 function changeDirection(dir){
     if(dir==="LEFT" && d!=="RIGHT") d="LEFT";
     else if(dir==="UP" && d!=="DOWN") d="UP";
@@ -168,6 +197,7 @@ function changeDirection(dir){
     else if(dir==="DOWN" && d!=="UP") d="DOWN";
 }
 
+// Keyboard Controls
 document.addEventListener("keydown", function(e){
     if(e.key==="ArrowLeft") changeDirection("LEFT");
     else if(e.key==="ArrowUp") changeDirection("UP");
@@ -175,18 +205,27 @@ document.addEventListener("keydown", function(e){
     else if(e.key==="ArrowDown") changeDirection("DOWN");
 });
 
+// Draw Function
 function draw(){
-    ctx.fillStyle="black";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+    // Background (Grass image)
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
+    // Draw Snake
     for(let i=0;i<snake.length;i++){
-        ctx.fillStyle = (i===0) ? "#00ffcc" : "#008866";
-        ctx.fillRect(snake[i].x, snake[i].y, box-2, box-2);
+        ctx.fillStyle = (i===0)?"#00ffcc":"#008866";
+        let radius = box/2;
+        ctx.beginPath();
+        ctx.arc(snake[i].x + radius, snake[i].y + radius, radius-2, 0, 2*Math.PI);
+        ctx.fill();
     }
 
+    // Draw Food
     ctx.fillStyle="red";
-    ctx.fillRect(food.x, food.y, box, box);
+    ctx.beginPath();
+    ctx.arc(food.x + box/2, food.y + box/2, box/2, 0, 2*Math.PI);
+    ctx.fill();
 
+    // Move Snake
     let sX = snake[0].x;
     let sY = snake[0].y;
 
@@ -195,10 +234,10 @@ function draw(){
     if(d==="RIGHT") sX += box;
     if(d==="DOWN") sY += box;
 
+    // Eat food
     if(sX===food.x && sY===food.y){
         score++;
         document.getElementById("score").innerHTML = score;
-
         if(score > highScore){
             highScore = score;
             localStorage.setItem("snakeHS", highScore);
@@ -209,25 +248,22 @@ function draw(){
         snake.pop();
     }
 
+    // Collision Check
     const newHead = {x:sX, y:sY};
-
     if(sX<0 || sX>=canvas.width || sY<0 || sY>=canvas.height || collision(newHead,snake)){
         clearInterval(game);
-        setTimeout(()=>{
-            alert("গেম ওভার! স্কোর: "+score);
-            startGame();
-        },100);
+        setTimeout(()=>{ alert("গেম ওভার! স্কোর: "+score); startGame(); },100);
         return;
     }
 
     snake.unshift(newHead);
 }
 
+// Collision
 function collision(head,array){
     return array.some(segment => segment.x===head.x && segment.y===head.y);
 }
 
 </script>
-
 </body>
 </html>
