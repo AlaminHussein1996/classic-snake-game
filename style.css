@@ -31,7 +31,7 @@ body {
     box-shadow: 0 0 25px #00ffcc;
 }
 
-/* Start Button - গেম শুরু করার উজ্জ্বল বাটন */
+/* Start Button - উজ্জ্বল বাটন */
 .start-btn {
     margin-top: 20px;
     padding: 15px 40px;
@@ -42,13 +42,18 @@ body {
     border-radius: 35px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 20px #00ffcc, 0 0 40px #008866;
-    transition: 0.3s;
+    box-shadow: 0 0 20px #00ffcc;
 }
 
-.start-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 30px #00ffcc, 0 0 60px #008866;
+/* Canvas - এখানে আপনার ঘাসের ছবি সেট হবে */
+canvas {
+    border: 5px solid #333;
+    max-width: 90vw;
+    /* আপনার আপলোড করা ঘাসের ছবিটির নাম এখানে দেওয়া হলো */
+    background: url('grass.png');
+    background-size: cover; 
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
 }
 
 /* Score Board - স্কোরবোর্ড */
@@ -58,18 +63,7 @@ body {
     font-weight: bold;
 }
 
-/* Canvas - এখানে ঘাসের ব্যাকগ্রাউন্ড যুক্ত করা হয়েছে */
-canvas {
-    border: 5px solid #333;
-    max-width: 90vw;
-    /* ঘাসের টেক্সচার এবং সবুজ রঙের মিশ্রণ */
-    background: url('https://www.transparenttextures.com/patterns/grass.png'), #2d5a27;
-    background-size: auto;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-}
-
-/* Controls - জয়স্টিক বা কন্ট্রোল বাটনগুলো */
+/* Controls - কন্ট্রোল বাটনগুলো */
 .controls {
     display: grid;
     grid-template-columns: repeat(3, 70px);
@@ -88,17 +82,5 @@ canvas {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 15px #00ffcc, 0 0 30px #008866;
-    transition: 0.2s;
-}
-
-.controls .btn:active {
-    transform: scale(0.9);
-}
-
-.controls .btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 25px #00ffcc, 0 0 50px #008866;
-    background: linear-gradient(145deg, #222, #444);
+    box-shadow: 0 0 15px #00ffcc;
 }
