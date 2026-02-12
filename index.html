@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ক্লাসিক স্নেক গেম</title>
+    <title>AL - Snake Game</title>
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" href="logo.png" type="image/png">
+    
     <style>
         body {
             background-color: #1a1a1a;
@@ -17,125 +20,144 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
         }
-        canvas {
-            border: 4px solid #00ffcc;
-            background-color: #000;
-            box-shadow: 0 0 20px #00ffcc;
-            max-width: 90vw;
-            max-height: 50vh;
+
+        /* লোগো স্ক্রিন */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
         }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 25px #00ffcc;
+        }
+
+        canvas {
+            border: 5px solid #333;
+            background-color: #000;
+            max-width: 90vw;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+        }
+
         .controls {
             display: grid;
-            grid-template-columns: repeat(3, 60px);
-            gap: 10px;
+            grid-template-columns: repeat(3, 70px);
+            gap: 15px;
             margin-top: 20px;
         }
+
         .btn {
-            width: 60px;
-            height: 60px;
-            background: #333;
+            width: 70px; height: 70px;
+            background: #222;
             border: 2px solid #00ffcc;
             color: #00ffcc;
-            font-size: 24px;
+            font-size: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            user-select: none;
-        }
-        .score-board {
-            font-size: 20px;
-            margin-bottom: 10px;
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
 
-    <div class="score-board">স্কোর: <span id="score">0</span></div>
+    <div id="splash-screen">
+        <img src="logo.png" alt="AL Logo" class="splash-logo">
+        <h2 style="letter-spacing: 3px;">AL GAMING</h2>
+    </div>
+
+    <div style="margin-bottom: 10px;">স্কোর: <span id="score">0</span> | সেরা: <span id="highScore">0</span></div>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
 
     <div class="controls">
-        <div></div>
-        <div class="btn" onclick="changeDirection('up')">▲</div>
-        <div></div>
+        <div></div><div class="btn" onclick="changeDirection('up')">▲</div><div></div>
         <div class="btn" onclick="changeDirection('left')">◀</div>
         <div class="btn" onclick="changeDirection('down')">▼</div>
         <div class="btn" onclick="changeDirection('right')">▶</div>
     </div>
 
     <script>
+        // ২ সেকেন্ড পর লোগো স্ক্রিন চলে যাবে
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 1000);
+        }, 2000);
+
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const scoreElement = document.getElementById("score");
-
         let box = 20;
-        let snake = [{ x: 9 * box, y: 10 * box }];
-        let food = {
-            x: Math.floor(Math.random() * 19 + 1) * box,
-            y: Math.floor(Math.random() * 19 + 1) * box
-        };
+        let snake = [{x: 9 * box, y: 10 * box}];
+        let food = {x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box};
         let score = 0;
+        let highScore = localStorage.getItem("snakeHS") || 0;
+        document.getElementById("highScore").innerHTML = highScore;
         let d;
 
-        function changeDirection(direction) {
-            if (direction == 'left' && d != 'RIGHT') d = 'LEFT';
-            if (direction == 'up' && d != 'DOWN') d = 'UP';
-            if (direction == 'right' && d != 'LEFT') d = 'RIGHT';
-            if (direction == 'down' && d != 'UP') d = 'DOWN';
+        function changeDirection(dir) {
+            if(dir=='left' && d!='RIGHT') d='LEFT';
+            if(dir=='up' && d!='DOWN') d='UP';
+            if(dir=='right' && d!='LEFT') d='RIGHT';
+            if(dir=='down' && d!='UP') d='DOWN';
         }
 
         function draw() {
             ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0,0,canvas.width,canvas.height);
 
-            for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? "#00ffcc" : "#008866";
-                ctx.fillRect(snake[i].x, snake[i].y, box, box);
-                ctx.strokeStyle = "black";
-                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            for(let i=0; i<snake.length; i++){
+                ctx.fillStyle = (i==0) ? "#00ffcc" : "#008866";
+                ctx.fillRect(snake[i].x, snake[i].y, box-2, box-2);
             }
 
             ctx.fillStyle = "red";
             ctx.fillRect(food.x, food.y, box, box);
 
-            let snakeX = snake[0].x;
-            let snakeY = snake[0].y;
+            let sX = snake[0].x;
+            let sY = snake[0].y;
 
-            if (d == "LEFT") snakeX -= box;
-            if (d == "UP") snakeY -= box;
-            if (d == "RIGHT") snakeX += box;
-            if (d == "DOWN") snakeY += box;
+            if(d=="LEFT") sX -= box;
+            if(d=="UP") sY -= box;
+            if(d=="RIGHT") sX += box;
+            if(d=="DOWN") sY += box;
 
-            if (snakeX == food.x && snakeY == food.y) {
+            if(sX==food.x && sY==food.y){
                 score++;
-                scoreElement.innerHTML = score;
-                food = {
-                    x: Math.floor(Math.random() * 19 + 1) * box,
-                    y: Math.floor(Math.random() * 19 + 1) * box
-                };
+                document.getElementById("score").innerHTML = score;
+                if(score > highScore){
+                    highScore = score;
+                    localStorage.setItem("snakeHS", highScore);
+                    document.getElementById("highScore").innerHTML = highScore;
+                }
+                food = {x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box};
             } else {
                 snake.pop();
             }
 
-            let newHead = { x: snakeX, y: snakeY };
-
-            if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+            let newHead = {x:sX, y:sY};
+            if(sX<0 || sX>=canvas.width || sY<0 || sY>=canvas.height || collision(newHead, snake)){
                 clearInterval(game);
-                alert("গেম ওভার! আপনার স্কোর: " + score);
+                alert("গেম ওভার! স্কোর: " + score);
                 location.reload();
             }
-
             snake.unshift(newHead);
         }
 
-        function collision(head, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (head.x == array[i].x && head.y == array[i].y) return true;
-            }
+        function collision(head, arr){
+            for(let i=0; i<arr.length; i++) if(head.x==arr[i].x && head.y==arr[i].y) return true;
             return false;
         }
 
-        let game = setInterval(draw, 200);
+        let game = setInterval(draw, 200); // আপনি যে স্পিড চেয়েছিলেন
     </script>
 </body>
 </html>
