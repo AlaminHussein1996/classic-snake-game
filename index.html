@@ -4,24 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AL - Snake Game</title>
-    <link rel="icon" href="logo.png" type="image/png">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00ffcc">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="splash-screen">
         <img src="logo.png" class="splash-logo">
         <h2>AL GAMING</h2>
-        <div id="permission-section" style="display:none;">
-            <p>গেম চালাতে অনুমতি প্রয়োজন</p>
-            <button class="start-btn" onclick="requestPermission()">অনুমতি দিন</button>
-        </div>
-        <div id="enter-section" style="display:none;">
-            <button class="start-btn" onclick="enterGame()">প্রবেশ করুন</button>
-        </div>
+        <button class="start-btn" onclick="startGame()">গেম শুরু করুন</button>
+    </div>
+
+    <div id="settings-menu" onclick="toggleSound()">
+        <span id="soundStatus">🔊 সাউন্ড: চালু</span>
     </div>
 
     <div id="score-board">
