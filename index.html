@@ -9,25 +9,25 @@
 <body>
     <div id="splash-screen">
         <img src="logo.png" class="splash-logo">
-        <h2>AL GAMING</h2>
-        <button class="start-btn" onclick="startGame()">গেম শুরু করুন</button>
+        <h2 style="margin-bottom:30px;">AL GAMING</h2>
+        <button class="start-btn" onclick="startGame()">গেম শুরু করার পারমিশন দিন</button>
     </div>
 
     <div id="settings-menu" onclick="toggleSound()">
         <span id="soundStatus">🔊 সাউন্ড: চালু</span>
     </div>
 
-    <div id="score-board">
-        স্কোর: <span id="score">0</span> | সেরা: <span id="highScore">0</span>
+    <div id="score-board" style="font-size:20px; margin-bottom:10px;">
+        স্কোর: <span id="score">0</span>
     </div>
 
     <canvas id="gameCanvas" width="400" height="400"></canvas>
 
-    <div class="controls">
-        <div></div><div class="btn" onclick="changeDirection('UP')">▲</div><div></div>
-        <div class="btn" onclick="changeDirection('LEFT')">◀</div>
-        <div class="btn" onclick="changeDirection('DOWN')">▼</div>
-        <div class="btn" onclick="changeDirection('RIGHT')">▶</div>
+    <div class="controls" style="margin-top:20px; display:grid; grid-template-columns: repeat(3, 70px); gap:10px;">
+        <div></div><div class="btn" onclick="changeDirection('UP')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▲</div><div></div>
+        <div class="btn" onclick="changeDirection('LEFT')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">◀</div>
+        <div class="btn" onclick="changeDirection('DOWN')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▼</div>
+        <div class="btn" onclick="changeDirection('RIGHT')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▶</div>
     </div>
 
     <script src="game.js"></script>
