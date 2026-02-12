@@ -8,9 +8,15 @@ let dx = 1; let dy = 0;
 let score = 0;
 let isPaused = false;
 let isSoundOn = true;
+let gameInterval;
 
 const eatSound = new Audio('eat.mp3');
 const gameOverSound = new Audio('gameover.mp3');
+
+function toggleSound() {
+    isSoundOn = !isSoundOn;
+    document.getElementById("soundStatus").innerText = isSoundOn ? "🔊 সাউন্ড: চালু" : "🔇 সাউন্ড: বন্ধ";
+}
 
 function draw() {
     if (isPaused) return;
@@ -47,6 +53,23 @@ function moveSnake() {
     }
 }
 
+function checkCollision() {
+    const head = snake[0];
+    // বর্ডার বা নিজের শরীরে ধাক্কা লাগলে
+    if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || 
+        snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+        
+        if(isSoundOn) gameOverSound.play().catch(e => {});
+        
+        clearInterval(gameInterval); // গেম থামানো
+        
+        setTimeout(() => {
+            alert("গেম ওভার! আপনার স্কোর: " + score);
+            location.reload(); // অটো রিফ্রেশ
+        }, 100);
+    }
+}
+
 function changeDirection(dir) {
     if (dir === 'UP' && dy === 0) { dx = 0; dy = -1; }
     if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 1; }
@@ -54,9 +77,13 @@ function changeDirection(dir) {
     if (dir === 'RIGHT' && dx === 0) { dx = 1; dy = 0; }
 }
 
-function pauseGame() { isPaused = !isPaused; }
+function pauseGame() { 
+    isPaused = !isPaused; 
+    document.querySelector('.pause-btn').innerText = isPaused ? "▶" : "⏸";
+}
 
 function startGame() {
     document.getElementById("splash-screen").style.display = "none";
-    setInterval(draw, 200); // গতি স্লো করা হয়েছে
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(draw, 200); // আরামদায়ক গতি
 }
