@@ -1,134 +1,102 @@
-// Canvas ও Context
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const scoreElement = document.getElementById("score");
+const highScoreElement = document.getElementById("highScore");
 
-let box = 20;
-let snake, food, score, highScore, direction, gameInterval;
+let snake = [{x: 10, y: 10}];
+let food = {x: 5, y: 5};
+let dx = 0; let dy = 0;
+let score = 0;
+let highScore = localStorage.getItem("highScore") || 0;
+highScoreElement.innerText = highScore;
 
-// হাইস্কোর লোড
-highScore = localStorage.getItem("snakeHS") || 0;
-document.getElementById("highScore").textContent = highScore;
+// আপনার আপলোড করা সাউন্ড ফাইলগুলো এখানে কানেক্ট করা হয়েছে
+let isSoundOn = true;
+const eatSound = new Audio('eat.mp3');
+const gameOverSound = new Audio('gameover.mp3');
 
-// Splash Screen Logic
-window.onload = () => {
-    setTimeout(() => {
-        document.getElementById("permission-section").style.display = "block";
-    }, 1500);
-};
-
-function requestPermission() {
-    document.getElementById("permission-section").style.display = "none";
-    document.getElementById("enter-section").style.display = "block";
+// সাউন্ড কন্ট্রোল করার ফাংশন
+function toggleSound() {
+    isSoundOn = !isSoundOn;
+    document.getElementById("soundStatus").innerText = isSoundOn ? "🔊 সাউন্ড: চালু" : "🔇 সাউন্ড: বন্ধ";
 }
 
-function enterGame() {
-    document.getElementById("splash-screen").style.opacity = "0";
-    setTimeout(() => {
-        document.getElementById("splash-screen").style.display = "none";
-        startGame();
-    }, 800);
-}
-
-// Game Initialization
-function startGame() {
-    snake = [{ x: 9 * box, y: 10 * box }];
-    food = generateFood();
-    score = 0;
-    direction = "";
-    document.getElementById("score").textContent = score;
-
-    clearInterval(gameInterval);
-    gameInterval = setInterval(draw, 300); // Slower snake
-}
-
-// Random Food Generator
-function generateFood() {
-    return {
-        x: Math.floor(Math.random() * (canvas.width / box)) * box,
-        y: Math.floor(Math.random() * (canvas.height / box)) * box
-    };
-}
-
-// Direction Change
-function changeDirection(dir) {
-    if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-    else if (dir === "UP" && direction !== "DOWN") direction = "UP";
-    else if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
-    else if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
-}
-
-// Keyboard Control
-document.addEventListener("keydown", (e) => {
-    switch (e.key) {
-        case "ArrowLeft": changeDirection("LEFT"); break;
-        case "ArrowUp": changeDirection("UP"); break;
-        case "ArrowRight": changeDirection("RIGHT"); break;
-        case "ArrowDown": changeDirection("DOWN"); break;
-    }
-});
-
-// Draw Game
 function draw() {
-    // Clear Canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw Snake
-    snake.forEach((segment, index) => {
+    
+    // সাপ আঁকা (আপনার আগের ডিজাইন অনুযায়ী)
+    snake.forEach((part, index) => {
         ctx.fillStyle = index === 0 ? "#00ffcc" : "#008866";
-        let radius = box / 2;
-        ctx.beginPath();
-        ctx.arc(segment.x + radius, segment.y + radius, radius - 2, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.fillRect(part.x * 20, part.y * 20, 18, 18);
     });
 
-    // Draw Food
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-    ctx.arc(food.x + box / 2, food.y + box / 2, box / 2, 0, 2 * Math.PI);
-    ctx.fill();
+    // খাবার আঁকা
+    ctx.fillStyle = "#ff4444";
+    ctx.fillRect(food.x * 20, food.y * 20, 18, 18);
 
-    // Move Snake
-    let headX = snake[0].x;
-    let headY = snake[0].y;
-
-    if (direction === "LEFT") headX -= box;
-    if (direction === "UP") headY -= box;
-    if (direction === "RIGHT") headX += box;
-    if (direction === "DOWN") headY += box;
-
-    // Eat Food
-    if (headX === food.x && headY === food.y) {
-        score++;
-        document.getElementById("score").textContent = score;
-
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem("snakeHS", highScore);
-            document.getElementById("highScore").textContent = highScore;
-        }
-
-        food = generateFood();
-    } else {
-        snake.pop(); // Remove tail if no food eaten
-    }
-
-    const newHead = { x: headX, y: headY };
-
-    // Collision Check
-    if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height || checkCollision(newHead, snake)) {
-        clearInterval(gameInterval);
-        setTimeout(() => {
-            alert("গেম ওভার! স্কোর: " + score);
-            startGame();
-        }, 100);
-        return;
-    }
-
-    // Add new head
-    snake.unshift(newHead);
+    moveSnake();
+    checkCollision();
 }
 
-// Collision Detection
-function checkCollision(head, array) {
-    return array.some(segment => segment.x === head.x && segment.y === head.y);
+function moveSnake() {
+    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+    snake.unshift(head);
+
+    // খাবার খাওয়ার সময় সাউন্ড বাজবে
+    if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreElement.innerText = score;
+        
+        if(isSoundOn) {
+            eatSound.currentTime = 0; 
+            eatSound.play().catch(e => console.log("Sound Error"));
+        }
+        
+        generateFood();
+    } else {
+        snake.pop();
+    }
+}
+
+function generateFood() {
+    food.x = Math.floor(Math.random() * 20);
+    food.y = Math.floor(Math.random() * 20);
+}
+
+function checkCollision() {
+    const head = snake[0];
+    // দেয়াল বা শরীরে ধাক্কা লাগলে সাউন্ড বাজবে
+    if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || 
+        snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+        
+        if(isSoundOn) {
+            gameOverSound.play().catch(e => console.log("Sound Error"));
+        }
+        
+        resetGame();
+    }
+}
+
+function resetGame() {
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("highScore", highScore);
+        highScoreElement.innerText = highScore;
+    }
+    alert("গেম ওভার! আপনার স্কোর: " + score);
+    snake = [{x: 10, y: 10}]; dx = 0; dy = 0; score = 0;
+    scoreElement.innerText = score;
+}
+
+function changeDirection(dir) {
+    if (dir === 'UP' && dy === 0) { dx = 0; dy = -1; }
+    if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 1; }
+    if (dir === 'LEFT' && dx === 0) { dx = -1; dy = 0; }
+    if (dir === 'RIGHT' && dx === 0) { dx = 1; dy = 0; }
+}
+
+// স্প্ল্যাশ স্ক্রিন থেকে গেম শুরু করা
+function startGame() {
+    document.getElementById("splash-screen").style.display = "none";
+    setInterval(draw, 150);
 }
