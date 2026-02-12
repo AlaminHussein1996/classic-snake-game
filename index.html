@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AL - Snake Game</title>
-    <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="manifest" href="manifest.json">
     
@@ -32,7 +31,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            transition: opacity 1s ease;
+            transition: opacity 0.8s ease;
         }
 
         .splash-logo {
@@ -43,11 +42,23 @@
             box-shadow: 0 0 25px #00ffcc;
         }
 
+        .start-btn {
+            margin-top: 20px;
+            padding: 12px 35px;
+            font-size: 18px;
+            background: #00ffcc;
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
         canvas {
             border: 5px solid #333;
             background-color: #000;
             max-width: 90vw;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
         }
 
         .controls {
@@ -75,6 +86,7 @@
     <div id="splash-screen">
         <img src="logo.png" alt="AL Logo" class="splash-logo">
         <h2 style="letter-spacing: 3px;">AL GAMING</h2>
+        <button class="start-btn" onclick="startGame()">গেম শুরু করুন (START)</button>
     </div>
 
     <div style="margin-bottom: 10px;">স্কোর: <span id="score">0</span> | সেরা: <span id="highScore">0</span></div>
@@ -88,11 +100,14 @@
     </div>
 
     <script>
-        // ২ সেকেন্ড পর লোগো স্ক্রিন চলে যাবে
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 1000);
-        }, 2000);
+        // বাটন ক্লিক করলে গেম শুরু হবে
+        function startGame() {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 800);
+        }
 
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
@@ -158,7 +173,7 @@
             return false;
         }
 
-        let game = setInterval(draw, 200); // আপনি যে স্পিড চেয়েছিলেন
+        let game = setInterval(draw, 200);
     </script>
 </body>
 </html>
