@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>AL Snake Game</title>
+    <title>AL Snake Game Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body oncontextmenu="return false;"> <div id="splash-screen">
+<body oncontextmenu="return false;">
+
+    <div id="splash-screen">
         <img src="logo.png" class="splash-logo">
+        <h2>AL GAMING</h2>
         <button class="start-btn" onclick="startGame()">গেম শুরু করুন</button>
     </div>
 
@@ -17,9 +20,10 @@
         <span id="soundStatus">🔊 সাউন্ড: চালু</span>
     </div>
 
-    <div id="score-board">স্কোর: <span id="score">0</span></div>
-
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="game-container">
+        <div id="score-board">স্কোর: <span id="score">0</span></div>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </div>
 
     <div class="controls">
         <div></div><div class="btn" onclick="changeDirection('UP')">▲</div><div></div>
