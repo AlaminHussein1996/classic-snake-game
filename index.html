@@ -3,31 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AL - Snake Game</title>
+    <title>AL Snake Game Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="splash-screen">
         <img src="logo.png" class="splash-logo">
-        <h2 style="margin-bottom:30px;">AL GAMING</h2>
-        <button class="start-btn" onclick="startGame()">গেম শুরু করার পারমিশন দিন</button>
+        <button class="start-btn" onclick="startGame()" style="padding:15px 40px; background:#00ffcc; border:none; border-radius:30px; font-weight:bold;">গেম শুরু করুন</button>
     </div>
 
     <div id="settings-menu" onclick="toggleSound()">
         <span id="soundStatus">🔊 সাউন্ড: চালু</span>
     </div>
 
-    <div id="score-board" style="font-size:20px; margin-bottom:10px;">
-        স্কোর: <span id="score">0</span>
+    <div id="game-container">
+        <div id="score-board" style="color:#00ffcc; font-size:22px; text-align:center; margin-bottom:10px;">
+            স্কোর: <span id="score">0</span> | সেরা: <span id="highScore">0</span>
+        </div>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
     </div>
 
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-
-    <div class="controls" style="margin-top:20px; display:grid; grid-template-columns: repeat(3, 70px); gap:10px;">
-        <div></div><div class="btn" onclick="changeDirection('UP')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▲</div><div></div>
-        <div class="btn" onclick="changeDirection('LEFT')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">◀</div>
-        <div class="btn" onclick="changeDirection('DOWN')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▼</div>
-        <div class="btn" onclick="changeDirection('RIGHT')" style="width:70px; height:70px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; border:1px solid #00ffcc;">▶</div>
+    <div class="controls">
+        <div></div>
+        <div class="btn" onclick="changeDirection('UP')">▲</div>
+        <div></div>
+        
+        <div class="btn" onclick="changeDirection('LEFT')">◀</div>
+        <div class="btn pause-btn" onclick="pauseGame()">⏸</div> <div class="btn" onclick="changeDirection('RIGHT')">▶</div>
+        
+        <div></div>
+        <div class="btn" onclick="changeDirection('DOWN')">▼</div>
+        <div></div>
     </div>
 
     <script src="game.js"></script>
