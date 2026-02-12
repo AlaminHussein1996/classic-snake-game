@@ -55,17 +55,15 @@ function moveSnake() {
 
 function checkCollision() {
     const head = snake[0];
-    // বর্ডার বা নিজের শরীরে ধাক্কা লাগলে
     if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || 
         snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
         
         if(isSoundOn) gameOverSound.play().catch(e => {});
-        
-        clearInterval(gameInterval); // গেম থামানো
+        clearInterval(gameInterval);
         
         setTimeout(() => {
             alert("গেম ওভার! আপনার স্কোর: " + score);
-            location.reload(); // অটো রিফ্রেশ
+            location.reload(); 
         }, 100);
     }
 }
@@ -85,5 +83,5 @@ function pauseGame() {
 function startGame() {
     document.getElementById("splash-screen").style.display = "none";
     if (gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(draw, 200); // আরামদায়ক গতি
+    gameInterval = setInterval(draw, 200); 
 }
